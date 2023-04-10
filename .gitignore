@@ -62,4 +62,3 @@ venv.bak/
 .idea/*
 .env
 info.ini
-credentials.json

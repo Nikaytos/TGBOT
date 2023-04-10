@@ -1,7 +1,7 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
 
-from tgbot.keyboards.inline import get_meet_keyboard, get_info_keyboard
+from tgbot.keyboards.inline import get_meet_keyboard, get_info_keyboard, get_files_keyboard
 from tgbot.keyboards.reply import get_start_keyboard
 
 
@@ -32,8 +32,14 @@ async def user_info(message: Message):
     await message.answer("Чо нада?", reply_markup=keyboard)
 
 
+async def user_files(message: Message):
+    keyboard = get_files_keyboard()
+    await message.answer("Дисципліна:", reply_markup=keyboard)
+
+
 def register_user(dp: Dispatcher):
     dp.register_message_handler(user_start, commands=["start"], state="*")
     dp.register_message_handler(user_help, commands=["help"], state="*")
     dp.register_message_handler(user_meet, lambda message: message.text.lower() == "meet")
     dp.register_message_handler(user_info, lambda message: message.text.lower() == "інфа")
+    dp.register_message_handler(user_files, lambda message: message.text.lower() == "файлікі")

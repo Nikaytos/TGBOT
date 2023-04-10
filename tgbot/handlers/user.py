@@ -35,6 +35,5 @@ async def user_info(message: Message):
 def register_user(dp: Dispatcher):
     dp.register_message_handler(user_start, commands=["start"], state="*")
     dp.register_message_handler(user_help, commands=["help"], state="*")
-    dp.register_message_handler(user_meet, lambda message: message.text in ["Meet", "meet"])
-    dp.register_message_handler(user_info, lambda message: message.text in ["Інфа", "інфа"])
-
+    dp.register_message_handler(user_meet, lambda message: message.text.lower() == "meet")
+    dp.register_message_handler(user_info, lambda message: message.text.lower() == "інфа")

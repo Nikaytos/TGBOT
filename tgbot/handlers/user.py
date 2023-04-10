@@ -19,7 +19,7 @@ async def user_help(message: Message):
                 "/help - вивести цю довідку\n" \
                 "Meet - посилання на всі уроки\n" \
                 "Інфа - інформація про всяке (пошти і т.п.)\n" \
-                "Файли "
+                "Файли - матеріали з різних дисциплін"
     await message.answer(help_text)
 
 

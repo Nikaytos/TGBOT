@@ -1,11 +1,12 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
+import re
 
 
-async def user_message(message: Message):
-    welcome_text = "Вітання! Я бот. Для отримання інструкцій використовуй команду /help."
-    await message.answer(welcome_text)
+async def user_natu(message: Message):
+    text = "натурал тут тільки Андрій"
+    await message.reply(text)
 
 
 def register_echo(dp: Dispatcher):
-    dp.register_message_handler(user_message)
+    dp.register_message_handler(user_natu, regexp=re.compile(r"(?i)\bнатурал\b"))

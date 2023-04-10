@@ -8,6 +8,7 @@ from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from tgbot.config import load_config
 from tgbot.filters.admin import AdminFilter
 from tgbot.handlers.admin import register_admin
+from tgbot.handlers.echo import register_echo
 from tgbot.handlers.user import register_user
 from tgbot.keyboards.inline import register_inline
 from tgbot.middlewares.environment import EnvironmentMiddleware
@@ -40,7 +41,7 @@ def register_all_filters(dp):
 def register_all_handlers(dp):
     register_admin(dp)
     register_user(dp)
-    # register_echo(dp)
+    register_echo(dp)
 
 
 def register_all_keyboards(dp):
@@ -56,8 +57,9 @@ async def main():
     config = load_config(".env")
 
     storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()
-    PROXY_URL = "http://proxy.server:3128"
-    bot = Bot(token=config.tg_bot.token, parse_mode='HTML', proxy=PROXY_URL)
+    bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
+    # PROXY_URL = "http://proxy.server:3128"
+    # bot = Bot(token=config.tg_bot.token, parse_mode='HTML', proxy=PROXY_URL)
     dp = Dispatcher(bot, storage=storage)
 
     bot['config'] = config
@@ -66,6 +68,7 @@ async def main():
     register_all_filters(dp)
     register_all_handlers(dp)
     register_all_keyboards(dp)
+
 
     # start
     try:

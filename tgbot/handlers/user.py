@@ -18,7 +18,8 @@ async def user_help(message: Message):
     help_text = "Це мій бот. Ось що я вмію:\n" \
                 "/help - вивести цю довідку\n" \
                 "Meet - посилання на всі уроки\n" \
-                "Інфа - інформація про всяке (пошти і т.п.)"
+                "Інфа - інформація про всяке (пошти і т.п.)\n" \
+                "Файли "
     await message.answer(help_text)
 
 
@@ -42,4 +43,4 @@ def register_user(dp: Dispatcher):
     dp.register_message_handler(user_help, commands=["help"], state="*")
     dp.register_message_handler(user_meet, lambda message: message.text.lower() == "meet")
     dp.register_message_handler(user_info, lambda message: message.text.lower() == "інфа")
-    dp.register_message_handler(user_files, lambda message: message.text.lower() == "файлікі")
+    dp.register_message_handler(user_files, lambda message: message.text.lower() in ["файли", "файлікі"])

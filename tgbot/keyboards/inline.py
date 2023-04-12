@@ -3,39 +3,53 @@ from aiogram.types import InlineKeyboardMarkup, CallbackQuery, InlineKeyboardBut
 
 from tgbot.config import Config
 
+all_files = ["lab1", "lab2", "lab3", "ict"]
+all_disc = ["oop", "lmv", "vm", "im"]
+all_back = ["meet_back", "info_back", "files_back", "file_back"]
 
-async def user_files_oop(query: CallbackQuery):
+
+async def user_files_disc(query: CallbackQuery):
     await query.message.delete()
-    text = "Файли ООП:"
-    keyboard = get_files_oop_keyboard()
+    data = query.data
+    text = None
+    if data == "oop":
+        text = "Файли ООП:"
+    if data == "lmv":
+        text = "Файли ЛМВ:"
+    if data == "vm":
+        text = "Файли ВМ:"
+    elif data == "im":
+        text = "Файли ІМ:"
+    keyboard = get_files_keyboard(data)
     await query.message.answer(text, reply_markup=keyboard)
 
 
-async def user_files_oop_callback(query: CallbackQuery, config: Config):
+async def user_files_doc(query: CallbackQuery, config: Config):
     await query.message.delete()
     await query.message.answer_chat_action("upload_document")
     keyboard = InlineKeyboardMarkup(row_width=1)
-    keyboard.add(InlineKeyboardButton("Назад", callback_data="oop_back"))
+    keyboard.add(InlineKeyboardButton("Назад", callback_data="file_back"))
     name = None
     url_name = None
-    input_file = None
     caption = None
     data = query.data
     if data == "lab1":
         name = list(config.dict.url.keys())[0]
         url_name = list(config.dict.url.values())[0]
         caption = "Перша лаба"
-        input_file = InputFile.from_url(url_name, filename=name)
     elif data == "lab2":
         name = list(config.dict.url.keys())[1]
         url_name = list(config.dict.url.values())[1]
-        input_file = InputFile.from_url(url_name, filename=name)
         caption = "Друга лаба"
     elif data == "lab3":
         name = list(config.dict.url.keys())[2]
         url_name = list(config.dict.url.values())[2]
-        input_file = InputFile.from_url(url_name, filename=name)
         caption = "Третя лаба"
+    elif data == "ict":
+        name = list(config.dict.url.keys())[3]
+        url_name = list(config.dict.url.values())[3]
+        caption = "ICT"
+    input_file = InputFile.from_url(url_name, filename=name)
     await query.message.answer_document(input_file, caption=caption, reply_markup=keyboard)
 
 
@@ -67,13 +81,27 @@ async def user_meet_callback(query: CallbackQuery, config: Config):
     await query.message.answer(text, reply_markup=keyboard)
 
 
-def get_files_oop_keyboard():
-    buttons = [
-        InlineKeyboardButton("Lab1", callback_data="lab1"),
-        InlineKeyboardButton("Lab2", callback_data="lab2"),
-        InlineKeyboardButton("Lab3", callback_data="lab3")
-    ]
+def get_files_keyboard(data):
     keyboard = InlineKeyboardMarkup(row_width=1)
+    buttons = None
+    if data == "oop":
+        buttons = [
+            InlineKeyboardButton("Lab1", callback_data="lab1"),
+            InlineKeyboardButton("Lab2", callback_data="lab2"),
+            InlineKeyboardButton("Lab3", callback_data="lab3")
+        ]
+    elif data == "lmv":
+        buttons = [
+            InlineKeyboardButton("Поки немає", callback_data="...")
+        ]
+    elif data == "vm":
+        buttons = [
+            InlineKeyboardButton("Поки немає", callback_data="...")
+        ]
+    elif data == "im":
+        buttons = [
+            InlineKeyboardButton("ICT", callback_data="ict")
+        ]
     for button in buttons:
         keyboard.add(button)
     keyboard.add(InlineKeyboardButton("Назад", callback_data="files_back"))
@@ -89,11 +117,12 @@ def get_info_keyboard():
     return keyboard
 
 
-def get_files_keyboard():
+def get_disc_keyboard():
     buttons = [
         InlineKeyboardButton("ООП", callback_data="oop"),
         InlineKeyboardButton("ЛМВ", callback_data="lmv"),
-        InlineKeyboardButton("ВМ", callback_data="vm")
+        InlineKeyboardButton("ВМ", callback_data="vm"),
+        InlineKeyboardButton("ІМ", callback_data="im")
     ]
     keyboard = InlineKeyboardMarkup(row_width=1)
     for button in buttons:
@@ -126,19 +155,17 @@ async def user_back(query: CallbackQuery):
         keyboard = get_info_keyboard()
         text = "Чо нада?"
     elif data == "files_back":
-        keyboard = get_files_keyboard()
+        keyboard = get_disc_keyboard()
         text = "Дисципліни:"
     elif data == "oop_back":
-        keyboard = get_files_oop_keyboard()
+        keyboard = get_files_keyboard()
         text = "Файли ООП:"
     await query.message.answer(text, reply_markup=keyboard)
-
-back = ["meet_back", "info_back", "files_back", "oop_back"]
 
 
 def register_inline(dp: Dispatcher):
     dp.register_callback_query_handler(user_meet_callback, lambda query: query.data in ["lectures", "practicums", "labs"])
-    dp.register_callback_query_handler(user_files_oop_callback, lambda query: query.data in ["lab1", "lab2", "lab3"])
+    dp.register_callback_query_handler(user_files_disc, lambda query: query.data in all_disc)
+    dp.register_callback_query_handler(user_files_doc, lambda query: query.data in all_files)
     dp.register_callback_query_handler(user_info_pp, lambda query: query.data == "teachers_emails")
-    dp.register_callback_query_handler(user_files_oop, lambda query: query.data == "oop")
-    dp.register_callback_query_handler(user_back, lambda query: query.data in back)
+    dp.register_callback_query_handler(user_back, lambda query: query.data in all_back)

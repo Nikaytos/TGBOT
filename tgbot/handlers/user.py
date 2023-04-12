@@ -1,7 +1,7 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
 
-from tgbot.keyboards.inline import get_meet_keyboard, get_info_keyboard, get_files_keyboard
+from tgbot.keyboards.inline import get_meet_keyboard, get_info_keyboard, get_disc_keyboard
 from tgbot.keyboards.reply import get_start_keyboard
 
 
@@ -34,7 +34,7 @@ async def user_info(message: Message):
 
 
 async def user_files(message: Message):
-    keyboard = get_files_keyboard()
+    keyboard = get_disc_keyboard()
     await message.answer("Дисципліна:", reply_markup=keyboard)
 
 
